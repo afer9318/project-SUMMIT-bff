@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.use('/v1/bff/', router);
+app.use('/v1/bff', router);
 
 const port = process.env.PORT || 3000;
 
