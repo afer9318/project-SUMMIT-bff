@@ -3,7 +3,7 @@ import authController from "../controllers/authController.js";
 
 const authRouter = Router();
 
-authRouter.get('/signup', authController.signUp);
+authRouter.post('/signup', authController.signUp);
 authRouter.get('/signin', authController.signIn);
 authRouter.get('/signup/verify', authController.verify);
 
