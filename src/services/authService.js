@@ -1,19 +1,9 @@
 import {CognitoUserPool, CognitoUserAttribute, CognitoUser} from 'amazon-cognito-identity-js';
 
 let poolData = {
-    UserPoolId: process.env.USER_POOL_ID || 'us-east-1_t4CeWwZN6',
-    ClientId: process.env.CLIENT_ID || '6l4o45ijlm1noadgp71d3ugsus'
+    UserPoolId: process.env.USER_POOL_ID,
+    ClientId: process.env.CLIENT_ID
 };
-
-// let poolData = {
-//     Port: process.env.PORT,
-//     UserPoolId: process.env.USER_POOL_ID,
-//     ClientId: process.env.CLIENT_ID
-// };
-
-// console.log('PORT:', process.env.PORT);
-// console.log('USER_POOL_ID:', process.env.USER_POOL_ID);
-// console.log('CLIENT_ID:', process.env.CLIENT_ID);
 
 var userPool = new CognitoUserPool(poolData);
 

@@ -1,7 +1,7 @@
 import express from 'express';
-import dotenv from 'dotenv';
 
-dotenv.config();
+// import env variables for all files correctly
+import 'dotenv/config'; 
 
 import router from './src/routes/index.js';
 
