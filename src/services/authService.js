@@ -8,28 +8,51 @@ let poolData = {
 var userPool = new CognitoUserPool(poolData);
 
 const authService = {
-    signUp: (req, res) => {
-        const {email, password} = req.body;
+    signUp: (email, password) => {
+        return new Promise((resolve, reject) => {
+            const attributeList = [
+                new CognitoUserAttribute({
+                    Name: 'email',
+                    Value: email
+                })
+            ];
 
-        const attributeList = [
-            new CognitoUserAttribute({
-                Name: 'email',
-                Value: email
-            })
-        ]
-
-        userPool.signUp(email, password, attributeList, null, (err, result) => {
-            if (err){
-                console.log(err.message || JSON.stringify(err));
-                return res.status(500).json({ error: err.message || 'An error occurred while signing up.' });
-            }
-
-            const username = result ? result.user.getUsername() : '';
-            console.log(`User created with email: ${username}`);
-            return res.status(200).json({ username });
-        })
+            userPool.signUp(email, password, attributeList, null, (err, result) => {
+                if (err) {
+                    console.log(err.message || JSON.stringify(err));
+                    reject(err);
+                } else {
+                    const username = result ? result.user.getUsername() : '';
+                    console.log(`User created with email: ${username}`);
+                    resolve(username);
+                }
+            });
+        });
     }
-
 };
 
 export default authService;
+
+// const signUp = (email, password) => {
+//     return new Promise((resolve, reject) => {
+//         const attributeList = [
+//             new CognitoUserAttribute({
+//                 Name: 'email',
+//                 Value: email
+//             })
+//         ];
+
+//         userPool.signUp(email, password, attributeList, null, (err, result) => {
+//             if (err) {
+//                 console.log(err.message || JSON.stringify(err));
+//                 reject(err);
+//             } else {
+//                 const username = result ? result.user.getUsername() : '';
+//                 console.log(`User created with email: ${username}`);
+//                 resolve(username);
+//             }
+//         });
+//     });
+// };
+
+// export {signUp};

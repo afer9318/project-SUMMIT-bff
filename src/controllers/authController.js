@@ -2,9 +2,15 @@ import express from 'express';
 import authService from '../services/authService.js';
 
 const authController = {
-    signUp: (req, res) => {
-        const {username, email, password} = req.body;
-        authService.signUp(req, res);
+    signUp: async (req, res) => {
+        try {
+            const { email, password } = req.body;
+            const username = await authService.signUp(email, password);
+            res.status(200).json({ username });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while signing up.' });
+        }
     },
     signIn: (req, res) => {
         // res.json(req.body);
