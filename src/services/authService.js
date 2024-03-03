@@ -1,14 +1,11 @@
-import {CognitoUserPool, CognitoUserAttribute, CognitoUser} from 'amazon-cognito-identity-js';
+import {AuthenticationDetails, CognitoUserPool, CognitoUserAttribute, CognitoUser} from 'amazon-cognito-identity-js';
 
-let poolData = {
+const poolData = {
     UserPoolId: process.env.USER_POOL_ID,
     ClientId: process.env.CLIENT_ID
 };
 
-var userPool = new CognitoUserPool(poolData);
-
-console.log(`UserPoolId: ${process.env.USER_POOL_ID}`);
-console.log(`ClientId: ${process.env.CLIENT_ID}`);
+const userPool = new CognitoUserPool(poolData);
 
 const authService = {
     signUp: (email, password) => {
@@ -35,7 +32,6 @@ const authService = {
 
     verifySignUp: (email, code) => {
         return new Promise((resolve, reject) => {
-            console.log(`userPool: ${JSON.stringify(userPool)}`);
 
             const cognitoUser = new CognitoUser({
                 Username: email,
@@ -49,6 +45,38 @@ const authService = {
 
                 console.log(`user signup verification result: ${result}`);
                 resolve(result);
+            });
+        });
+    },
+
+    signIn: (email, password) => {
+        return new Promise((resolve, reject) => {
+
+            const cognitoUser = new CognitoUser({
+                Username: email,
+                Pool: userPool,
+            });
+
+            const authenticationDetails = new AuthenticationDetails({
+                Username: email,
+                Password: password
+            });
+
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: (session, userConfirmationNecessary) => {
+                    if (userConfirmationNecessary) {
+                        return resolve({ userConfirmationNecessary });
+                    }
+
+                    resolve({
+                        accessToken: session.getAccessToken().getJwtToken(),
+                        refreshToken: session.getRefreshToken().getToken(),
+                    });
+                },
+
+                onFailure: (err) => {
+                    reject(err);
+                }
             });
         });
     }
