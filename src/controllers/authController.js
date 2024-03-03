@@ -12,12 +12,19 @@ const authController = {
             res.status(500).json({ error: 'An error occurred while signing up.' });
         }
     },
+    verifySignUp: async (req, res) => {
+        try {
+            const { email, code } = req.body;
+            const result = await authService.verifySignUp(email, code);
+            res.status(400).json({result});
+        }catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred while verifying sign up.' });
+        }
+    },
     signIn: (req, res) => {
         // res.json(req.body);
         res.send('SignIn!');
-    },
-    verify: (req, res) => {
-        res.send('SignUp Verify!');
     }
 };
 
